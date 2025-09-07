@@ -1,0 +1,17 @@
+/* You can add global styles to this file, and also import other style files */
+@import "tailwindcss";
+
+@font-face {
+    font-family: 'cool';
+    src: url('assets/cool.otf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.font-cool {
+    font-family: 'cool', sans-serif;
+}
+.text-header{
+    font-size: 400px;
+    line-height: 1;
+}
