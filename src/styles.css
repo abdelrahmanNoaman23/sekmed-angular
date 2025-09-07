@@ -12,6 +12,8 @@
     font-family: 'cool', sans-serif;
 }
 .text-header{
-    font-size: 400px;
+    font-size: 370px;
     line-height: 1;
+    font-weight: bolder;
+    margin-top: 10vh;
 }
