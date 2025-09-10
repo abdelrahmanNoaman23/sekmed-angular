@@ -1,0 +1,8 @@
+<div class="w-full">
+    <input type="text" placeholder="Type something..." (input)="onSearch($event.target.value)" class="mb-4 p-2  m-5 rounded-full border-0 ring-2 ring-black">
+    <div class="grid-cols-3 grid gap-2 p-5">
+        <div *ngFor="let product of products">
+        <app-product-card [product]="product" (addProductToCart)="addToCart()"></app-product-card>
+        </div>
+    </div>  
+</div>
