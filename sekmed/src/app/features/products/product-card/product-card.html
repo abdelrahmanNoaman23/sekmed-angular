@@ -1,7 +1,0 @@
-<div class="border-2 rounded-2xl space-y-3 p-3 ">
-    <img [src]="product.images[0]" alt="">
-    <h1>{{product.title}}</h1>
-    <p >{{product.description}}</p>
-    <p >{{product.price}}</p>
-    <button (click)="addToCart(); $event.stopPropagation()" class="bg-black text-white rounded-2xl font-bold">Add to cart</button>  <!-- Prevent propagation for addToCart -->
-</div>

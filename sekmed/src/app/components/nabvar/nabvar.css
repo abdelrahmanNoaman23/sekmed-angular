@@ -1,0 +1,10 @@
+@import "tailwindcss";
+/* Custom styles for smooth transitions that Tailwind doesn't cover */
+.dropdown-menu {
+  transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+}
+
+/* Ensure proper z-index stacking */
+.dropdown-menu {
+  z-index: 1000;
+}
