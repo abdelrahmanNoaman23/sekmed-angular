@@ -1,13 +1,16 @@
-import { Routes } from '@angular/router';
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { HomeComponent } from './components/home/home';
+import { ProductsComponent } from "./components/products/products";
 
 export const routes: Routes = [
-{
-    path: '',
-    pathMatch: 'full',
-    loadComponent: () => import('./pages/landing-page/landing-page.component').then((c) => c.LandingPageComponent)
-},
-{
-    path: 'home',
-    loadComponent: () => import('./pages/home-page/home-page.component').then((c) => c.HomePageComponent)
-}
+  { path: '', component: HomeComponent },
+  { path: 'products', component: ProductsComponent },
+  { path: '**', redirectTo: '' }
 ];
+
+@NgModule({
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule]
+})
+export class AppRoutingModule {}
