@@ -1,0 +1,24 @@
+<div class="w-64 bg-white rounded-lg shadow-sm p-6">
+  <h3 class="text-lg font-semibold text-gray-900 mb-4">Categories</h3>
+  <nav class="space-y-2">
+    <ng-container *ngIf="isLoading; else categoriesContent">
+      <p class="text-gray-500">Loading categories...</p>
+    </ng-container>
+    <ng-template #categoriesContent>
+      <ng-container *ngIf="categories && categories.length > 0; else noCategories">
+        <a *ngFor="let category of categories" 
+           (click)="onCategoryClick(category.id)"
+           class="flex items-center justify-between p-3 text-gray-700 hover:bg-gray-100 hover:text-blue-600 rounded-lg cursor-pointer transition-all duration-200 group">
+          <span class="font-medium">{{ category.name }}</span>
+          <svg class="w-4 h-4 text-gray-400 group-hover:text-blue-600 transition-colors" 
+               fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </a>
+      </ng-container>
+      <ng-template #noCategories>
+        <p class="text-gray-500">No categories available.</p>
+      </ng-template>
+    </ng-template>
+  </nav>
+</div>

@@ -10,5 +10,5 @@ import { NavigationComponent } from './components/nabvar/navbar';
   styleUrl: './app.css'
 })
 export class App {
-  protected readonly title = signal('sekmed');
+  protected readonly title = signal('Our Shop');
 }
