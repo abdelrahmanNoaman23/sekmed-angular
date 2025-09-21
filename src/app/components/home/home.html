@@ -1,15 +1,15 @@
 <div class="min-h-screen bg-gray-50">
-<div class="max-w-7xl mx-auto px-4 py-8">
-  <div class="flex gap-8">
-    <div class="sidebar-container">
-      <app-category-sidebar 
-        [categories]="sideMenuCategories"
-        [isLoading]="isLoading"
-        (categorySelected)="onCategorySelected($event)">
-      </app-category-sidebar>
+  <div class="max-w-7xl mx-auto px-4 py-8">
+    <div class="flex gap-8">
+      <div class="sidebar-container">
+        <app-category-sidebar 
+          [categories]="sideMenuCategories"
+          [isLoading]="isLoading"
+          (categorySelected)="onCategorySelected($event)">
+        </app-category-sidebar>
+      </div>
     </div>
   </div>
-</div>
 
   <div class="max-w-7xl mx-auto px-4 py-8">
     <div class="bg-white rounded-lg shadow-sm p-8">
@@ -23,28 +23,27 @@
       <div class="flex items-center justify-between mb-8">
         <div class="flex items-center gap-8">
           <h3 class="text-3xl font-bold text-gray-900">Flash Sales</h3>
-          
-<div class="flex items-center gap-4 text-sm">
-  <div class="text-center">
-    <div class="text-xs text-gray-500 mb-1">Days</div>
-    <div class="text-2xl font-bold">{{ (countdown?.days ?? 0).toString().padStart(2, '0') }}</div>
-  </div>
-  <div class="text-2xl font-bold text-red-500">:</div>
-  <div class="text-center">
-    <div class="text-xs text-gray-500 mb-1">Hours</div>
-    <div class="text-2xl font-bold">{{ (countdown?.hours ?? 0).toString().padStart(2, '0') }}</div>
-  </div>
-  <div class="text-2xl font-bold text-red-500">:</div>
-  <div class="text-center">
-    <div class="text-xs text-gray-500 mb-1">Minutes</div>
-    <div class="text-2xl font-bold">{{ (countdown?.minutes ?? 0).toString().padStart(2, '0') }}</div>
-  </div>
-  <div class="text-2xl font-bold text-red-500">:</div>
-  <div class="text-center">
-    <div class="text-xs text-gray-500 mb-1">Seconds</div>
-    <div class="text-2xl font-bold">{{ (countdown?.seconds ?? 0).toString().padStart(2, '0') }}</div>
-  </div>
-</div>
+          <div class="flex items-center gap-4 text-sm">
+            <div class="text-center">
+              <div class="text-xs text-gray-500 mb-1">Days</div>
+              <div class="text-2xl font-bold">{{ (countdown?.days ?? 0).toString().padStart(2, '0') }}</div>
+            </div>
+            <div class="text-2xl font-bold text-red-500">:</div>
+            <div class="text-center">
+              <div class="text-xs text-gray-500 mb-1">Hours</div>
+              <div class="text-2xl font-bold">{{ (countdown?.hours ?? 0).toString().padStart(2, '0') }}</div>
+            </div>
+            <div class="text-2xl font-bold text-red-500">:</div>
+            <div class="text-center">
+              <div class="text-xs text-gray-500 mb-1">Minutes</div>
+              <div class="text-2xl font-bold">{{ (countdown?.minutes ?? 0).toString().padStart(2, '0') }}</div>
+            </div>
+            <div class="text-2xl font-bold text-red-500">:</div>
+            <div class="text-center">
+              <div class="text-xs text-gray-500 mb-1">Seconds</div>
+              <div class="text-2xl font-bold">{{ (countdown?.seconds ?? 0).toString().padStart(2, '0') }}</div>
+            </div>
+          </div>
         </div>
 
         <div class="flex gap-2">
@@ -80,23 +79,23 @@
             <img [src]="product.images && product.images.length > 0 ? product.images[0] : 'https://via.placeholder.com/150'" [alt]="product.title" class="w-full h-40 object-cover rounded">
           </div>
 
-          <button class="w-full bg-black text-white py-2 rounded mb-4 opacity-0 group-hover:opacity-100 transition-opacity">
-            Add To Cart
+          <button (click)="addToCart(product)" class="w-full bg-red-500 text-white py-2 rounded mb-4 opacity-0 group-hover:opacity-100 transition-opacity">
+            Add to Cart
           </button>
 
           <h4 class="font-medium text-gray-900 mb-2 line-clamp-2">{{ product.title }}</h4>
           <div class="flex items-center gap-2 mb-2">
             <span class="text-red-500 font-bold">${{ product.price }}</span>
-            <span class="text-gray-500 line-through text-sm">${{ getOriginalPrice(product.price) }}</span>
+            <span class="text-gray-500 line-through text-sm">${{ getOriginalPrice(product.price, product.discountPercentage) }}</span>
           </div>
-          
+
           <div class="flex items-center gap-1">
             <div class="flex text-yellow-400">
               <svg *ngFor="let star of [1,2,3,4,5]" class="w-4 h-4 fill-current">
                 <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
               </svg>
             </div>
-            <span class="text-gray-500 text-sm">({{ Math.floor(Math.random() * 100) + 1 }})</span>
+            <span class="text-gray-500 text-sm">({{ product.reviewCount }})</span>
           </div>
         </div>
       </div>
@@ -116,7 +115,7 @@
           <div class="w-5 h-10 bg-red-500 rounded"></div>
           <h2 class="text-2xl font-bold text-gray-900">Categories</h2>
         </div>
-        
+
         <div class="flex gap-2">
           <button (click)="prevSlide()" class="w-10 h-10 bg-gray-100 hover:bg-gray-200 rounded-full flex items-center justify-center transition-colors">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

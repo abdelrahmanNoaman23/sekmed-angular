@@ -4,21 +4,8 @@ import { RouterModule, Router } from '@angular/router';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { forkJoin } from 'rxjs';
 import { CategorySidebarComponent } from '../category-sidebar/category-sidebar';
-
-interface Category {
-  id: number;
-  name: string;
-  image: string;
-}
-
-interface Product {
-  id: number;
-  title: string;
-  price: number;
-  description: string;
-  images: string[];
-  category: Category;
-}
+import { DataService, Category, Product } from '../../services/data.service';
+import { CartService } from '../../services/cart.service';
 
 @Component({
   selector: 'app-home',
@@ -37,9 +24,15 @@ export class HomeComponent implements OnInit, OnDestroy {
   countdown = { days: 0, hours: 0, minutes: 0, seconds: 0 };
   isLoading = true;
   private countdownInterval: any;
-  Math = Math;
 
-  constructor(private http: HttpClient, private router: Router, private cdr: ChangeDetectorRef, private zone: NgZone) {
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    private cdr: ChangeDetectorRef,
+    private zone: NgZone,
+    private dataService: DataService,
+    private cartService: CartService
+  ) {
     this.flashSaleEndTime.setDate(this.flashSaleEndTime.getDate() + 3);
   }
 
@@ -73,10 +66,14 @@ export class HomeComponent implements OnInit, OnDestroy {
           }));
           this.products = data.products.map(product => ({
             ...product,
-            images: Array.isArray(product.images) ? product.images : [product.images || 'https://via.placeholder.com/150']
+            images: Array.isArray(product.images) ? product.images : [product.images || 'https://via.placeholder.com/150'],
+            reviewCount: Math.floor(Math.random() * 100) + 1,
+            discountPercentage: Math.floor(Math.random() * 50) + 10
           }));
           this.sideMenuCategories = this.categories && this.categories.length > 0 ? this.categories.slice(0, 6) : [];
           this.displayProducts = this.products && this.products.length > 0 ? this.products.slice(0, 10) : [];
+          this.dataService.setCategories(this.categories);
+          this.dataService.setProducts(this.products);
           this.isLoading = false;
           console.log('SideMenuCategories before detectChanges:', this.sideMenuCategories);
           this.cdr.detectChanges();
@@ -99,22 +96,32 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   onCategorySelected(categoryId: number) {
     console.log('Navigating to products with category:', categoryId);
+    this.dataService.setSelectedCategoryId(categoryId);
     this.router.navigate(['/products'], { queryParams: { category: categoryId } });
   }
 
-startCountdown() {
-  this.countdownInterval = setInterval(() => {
-    const now = new Date().getTime();
-    const distance = this.flashSaleEndTime.getTime() - now;
-    this.countdown = {
-      days: Math.floor(distance / (1000 * 60 * 60 * 24)),
-      hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
-      minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
-      seconds: Math.floor((distance % (1000 * 60)) / 1000)
-    };
-    this.cdr.detectChanges();
-  }, 1000);
-}
+  startCountdown() {
+    this.zone.runOutsideAngular(() => {
+      this.countdownInterval = setInterval(() => {
+        const now = new Date().getTime();
+        const distance = this.flashSaleEndTime.getTime() - now;
+        this.zone.run(() => {
+          this.countdown = {
+            days: Math.floor(distance / (1000 * 60 * 60 * 24)),
+            hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+            minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
+            seconds: Math.floor((distance % (1000 * 60)) / 1000)
+          };
+          this.cdr.markForCheck();
+        });
+      }, 1000);
+    });
+  }
+
+  addToCart(product: Product) {
+    this.cartService.addToCart(product);
+    console.log('Product added to cart:', product.title);
+  }
 
   nextSlide() {
     this.currentSlide = (this.currentSlide + 1) % Math.ceil(this.categories.length / 6);
@@ -129,12 +136,7 @@ startCountdown() {
     return this.categories.slice(startIndex, startIndex + 6);
   }
 
-  getDiscountPercentage(): number {
-    return Math.floor(Math.random() * 50) + 10;
-  }
-
-  getOriginalPrice(currentPrice: number): number {
-    const discount = this.getDiscountPercentage();
-    return Math.round(currentPrice / (1 - discount / 100));
+  getOriginalPrice(currentPrice: number, discountPercentage: number): number {
+    return Math.round(currentPrice / (1 - discountPercentage / 100));
   }
 }
