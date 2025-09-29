@@ -1,0 +1,11 @@
+<div class="flex flex-wrap gap-4 mb-8">
+  <a *ngFor="let category of categories"
+     (click)="selectCategory(category.id)"
+     [class.bg-blue-500]="selectedCategoryId === category.id"
+     [class.text-white]="selectedCategoryId === category.id"
+     [class.bg-gray-100]="selectedCategoryId !== category.id"
+     [class.text-gray-700]="selectedCategoryId !== category.id"
+     class="px-4 py-2 rounded-lg cursor-pointer hover:bg-blue-600 hover:text-white transition-colors">
+    {{ category.name }}
+  </a>
+</div>
