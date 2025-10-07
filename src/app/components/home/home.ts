@@ -1,3 +1,4 @@
+// src/app/components/home/home.component.ts
 import { Component, OnInit, OnDestroy, ChangeDetectorRef, NgZone } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
@@ -21,7 +22,12 @@ export class HomeComponent implements OnInit, OnDestroy {
   displayProducts: Product[] = [];
   currentSlide = 0;
   flashSaleEndTime = new Date();
-  countdown = { days: 0, hours: 0, minutes: 0, seconds: 0 };
+  countdown: { days: number; hours: number; minutes: number; seconds: number } = {
+    days: 0,
+    hours: 0,
+    minutes: 0,
+    seconds: 0
+  };
   isLoading = true;
   private countdownInterval: any;
 
@@ -58,7 +64,6 @@ export class HomeComponent implements OnInit, OnDestroy {
         products: products$
       }).subscribe({
         next: (data) => {
-          console.log('Raw categories response:', data.categories);
           this.categories = data.categories.map(category => ({
             id: category.id,
             name: category.name,
@@ -70,14 +75,12 @@ export class HomeComponent implements OnInit, OnDestroy {
             reviewCount: Math.floor(Math.random() * 100) + 1,
             discountPercentage: Math.floor(Math.random() * 50) + 10
           }));
-          this.sideMenuCategories = this.categories && this.categories.length > 0 ? this.categories.slice(0, 6) : [];
-          this.displayProducts = this.products && this.products.length > 0 ? this.products.slice(0, 10) : [];
+          this.sideMenuCategories = this.categories.slice(0, 6);
+          this.displayProducts = this.products.slice(0, 10);
           this.dataService.setCategories(this.categories);
           this.dataService.setProducts(this.products);
           this.isLoading = false;
-          console.log('SideMenuCategories before detectChanges:', this.sideMenuCategories);
           this.cdr.detectChanges();
-          console.log('Change detection triggered');
         },
         error: (error) => {
           console.error('Error loading data:', error);
@@ -85,17 +88,12 @@ export class HomeComponent implements OnInit, OnDestroy {
           this.displayProducts = [];
           this.isLoading = false;
           this.cdr.detectChanges();
-        },
-        complete: () => {
-          console.log('SideMenuCategories:', this.sideMenuCategories);
-          console.log('DisplayProducts:', this.displayProducts);
         }
       });
     });
   }
 
   onCategorySelected(categoryId: number) {
-    console.log('Navigating to products with category:', categoryId);
     this.dataService.setSelectedCategoryId(categoryId);
     this.router.navigate(['/products'], { queryParams: { category: categoryId } });
   }
@@ -120,7 +118,6 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   addToCart(product: Product) {
     this.cartService.addToCart(product);
-    console.log('Product added to cart:', product.title);
   }
 
   nextSlide() {

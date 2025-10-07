@@ -1,0 +1,15 @@
+:host {
+  display: block;
+}
+
+mat-form-field.email-valid mat-error {
+  color: red;
+}
+
+mat-form-field.email-valid input {
+  border-color: red;
+}
+
+mat-form-field.ng-valid input {
+  border-color: green;
+}

@@ -1,0 +1,23 @@
+<div class="p-6">
+  <h2 mat-dialog-title class="text-xl font-bold mb-4">Sign In</h2>
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-4">
+    <mat-form-field class="w-full">
+      <mat-label>Email</mat-label>
+      <input matInput formControlName="email" type="email" placeholder="Enter your email">
+      <mat-error *ngIf="loginForm.get('email')?.hasError('required')">Email is required</mat-error>
+      <mat-error *ngIf="loginForm.get('email')?.hasError('email')">Invalid email format</mat-error>
+      <mat-error *ngIf="loginForm.get('email')?.hasError('emailTaken')">Email is already taken</mat-error>
+    </mat-form-field>
+    <mat-form-field class="w-full">
+      <mat-label>Password</mat-label>
+      <input matInput formControlName="password" type="password" placeholder="Enter your password">
+      <mat-error *ngIf="loginForm.get('password')?.hasError('required')">Password is required</mat-error>
+      <mat-error *ngIf="loginForm.get('password')?.hasError('minlength')">Password must be at least 8 characters</mat-error>
+    </mat-form-field>
+    <div class="flex justify-between items-center">
+      <button mat-raised-button color="primary" type="submit" [disabled]="loginForm.invalid">Sign In</button>
+      <a routerLink="/signup" (click)="openSignUp()" class="text-blue-600 hover:underline">Sign Up?</a>
+    </div>
+    <mat-error *ngIf="loginForm.hasError('loginFailed')" class="text-red-500">Login failed. Please try again.</mat-error>
+  </form>
+</div>

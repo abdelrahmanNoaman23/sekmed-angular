@@ -1,0 +1,23 @@
+<div class="min-h-screen bg-gray-50">
+  <div class="max-w-7xl mx-auto px-4 py-8">
+    <h2 class="text-2xl font-bold text-gray-900 mb-8">Your Cart</h2>
+    <div *ngIf="(cartItems$ | async)?.length; else emptyCart" class="grid gap-6">
+      <div *ngFor="let item of cartItems$ | async; trackBy: trackByProductId" 
+           class="flex items-center bg-white rounded-lg shadow-sm p-4">
+        <img [src]="item.images[0] || 'https://via.placeholder.com/150'" [alt]="item.title" class="w-24 h-24 object-cover rounded mr-4">
+        <div class="flex-1">
+          <h3 class="font-medium text-gray-900">{{ item.title }}</h3>
+          <p class="text-red-500 font-bold">${{ item.price }}</p>
+        </div>
+        <button (click)="removeFromCart(item)" class="text-red-500 hover:text-red-700">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+    <ng-template #emptyCart>
+      <p class="text-gray-500 text-center">Your cart is empty.</p>
+    </ng-template>
+  </div>
+</div>
