@@ -15,7 +15,7 @@ export interface Product {
   images: string[];
   category: Category;
   reviewCount?: number;
-  discountPercentage?: number;
+  discountPercentage: number; 
 }
 
 @Injectable({
